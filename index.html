@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>下载站</title>
+  <link rel="stylesheet" href="./webdav.css">
+</head>
+<body>
+  <div id="webdav-manager"></div>
+
+  <script src="./webdav.js"></script>
+  <script>
+    const manager = new WebDAVManager({
+      container: '#webdav-manager',
+      server: {
+        url: '/api/webdav-proxy', 
+      },
+      options: {
+        lang: 'zh-CN',
+        theme: 'light',
+        readonly: true,
+        showUpload: false,
+        showDelete: false,
+        showRename: false
+      }
+    });
+    manager.init();
+  </script>
+</body>
+</html>

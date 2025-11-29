@@ -1,0 +1,94 @@
+https://github.com/kd2org/webdav-manager.js
+
+使用 Vercel Serverless 函数作为代理（推荐，无需额外服务器）
+在项目中创建api/webdav-proxy.js文件，实现代理逻辑并存储认证信息（通过 Vercel环境变量配置敏感信息）：
+
+``` javascript
+// api/webdav-proxy.js
+export default async (req, res) => {
+  // 仅允许GET请求（下载/浏览需要）
+  if (req.method !== 'GET' && req.method !== 'OPTIONS') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  // 环境变量配置
+  const WEBDAV_URL = process.env.WEBDAV_URL;
+  const WEBDAV_USER = process.env.WEBDAV_USER;
+  const WEBDAV_PASS = process.env.WEBDAV_PASS;
+
+  // 跨域配置
+  res.setHeader('Access-Control-Allow-Origin', process.env.NEXT_PUBLIC_VERCEL_URL || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  try {
+    const targetUrl = new URL(req.url.replace('/api/webdav-proxy', ''), WEBDAV_URL).href;
+    const auth = Buffer.from(`${WEBDAV_USER}:${WEBDAV_PASS}`).toString('base64');
+    
+    const response = await fetch(targetUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Host': new URL(WEBDAV_URL).host,
+      },
+    });
+
+    // 转发下载响应（处理文件流）
+    const data = await response.arrayBuffer();
+    res.status(response.status);
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
+    }
+    res.send(Buffer.from(data));
+  } catch (error) {
+    console.error('Proxy error:', error);
+    res.status(500).json({ error: 'Download failed' });
+  }
+};
+```
+
+配置 Vercel 环境变量
+在 Vercel 项目的「Settings → Environment Variables」中添加：
+WEBDAV_URL: 你的 WebDAV 服务地址（如https://dav.example.com/remote.php/dav/files/your-user/）
+WEBDAV_USER: WebDAV 用户名
+WEBDAV_PASS: WebDAV 密码
+2. 配置 webdav-manager.js 对接代理
+修改前端代码，让 webdav-manager.js 请求代理接口而非直接请求 WebDAV 服务器：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebDAV 下载站</title>
+  <link rel="stylesheet" href="./webdav.css">
+</head>
+<body>
+  <div id="webdav-manager"></div>
+
+  <script src="./webdav.js"></script>
+  <script>
+    const manager = new WebDAVManager({
+      container: '#webdav-manager',
+      server: {
+        url: '/api/webdav-proxy', 
+      },
+      options: {
+        lang: 'zh-CN',
+        theme: 'light',
+        readonly: true,
+        showUpload: false,
+        showDelete: false,
+        showRename: false
+      }
+    });
+    manager.init();
+  </script>
+</body>
+</html>
+```
