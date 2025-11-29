@@ -1,0 +1,8 @@
+{
+  "name": "webdav-proxy",
+  "version": "1.0.0",
+  "dependencies": {
+    "basic-auth": "^2.0.1",
+    "http-proxy-middleware": "^2.0.6"
+  }
+}
