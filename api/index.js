@@ -1,8 +1,6 @@
 import { createClient } from 'webdav';
 import cors from 'cors';
 
-// 适配 Vercel Node 版本，跳过非必要证书验证（仅测试用，生产可删除）
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // CORS 中间件配置
 const corsMiddleware = cors({
@@ -101,7 +99,6 @@ export default async (req, res) => {
           <h1>📁 ${path}</h1>
           <ul class="file-list">
             ${path !== '/' ? `<li class="file-item parent-dir"><a href="${path.split('/').slice(0, -1).join('/') || '/'}">⬆️ Parent Directory</a></li>` : ''}
-            // 替换原文件链接生成部分
             ${files.map(file => {
                 // 处理路径，确保以当前路径为基准拼接，避免重复斜杠
                 const relativePath = file.filename.startsWith(path)
