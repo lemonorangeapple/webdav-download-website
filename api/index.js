@@ -1,4 +1,4 @@
-const { createClient } = require('webdav-client');
+const { createClient } = require('webdav'); // 修正包名
 const cors = require('cors');
 
 // 初始化 CORS 中间件（允许所有域名访问，生产可限定）
@@ -37,8 +37,14 @@ module.exports = async (req, res) => {
 
         // 4. 处理文件/目录请求（GET/HEAD）
         if (req.method === 'GET' || req.method === 'HEAD') {
-            // 先检查路径是否存在
-            const pathExists = await webdavClient.exists(path);
+            // 先检查路径是否存在（适配 webdav 5.x API）
+            let pathExists = false;
+            try {
+                await webdavClient.stat(path);
+                pathExists = true;
+            } catch (err) {
+                if (err.statusCode !== 404) throw err;
+            }
             if (!pathExists) {
                 return res.status(404).json({ error: `Path "${path}" not found` });
             }
@@ -46,7 +52,7 @@ module.exports = async (req, res) => {
             // 获取路径信息（目录/文件）
             const pathStat = await webdavClient.stat(path);
 
-            if (pathStat.isDirectory()) {
+            if (pathStat.type === 'directory') { // 修正：5.x 用 type 判断类型
                 // 目录：返回简易文件列表（支持点击下载）
                 const files = await webdavClient.getDirectoryContents(path);
                 let html = `

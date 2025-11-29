@@ -2,7 +2,7 @@
     "name": "webdav-vercel-mirror",
     "version": "1.0.0",
     "dependencies": {
-        "webdav-client": "^4.13.0",
+        "webdav": "^5.3.0",
         "cors": "^2.8.5"
     }
 }
