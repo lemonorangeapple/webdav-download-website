@@ -128,15 +128,6 @@ export default async (req, res) => {
             return res.status(200).send(html);
         }
 
-        // 7. 处理文件请求（下载）- 核心修复点
-        const maxFileSize = 100 * 1024 * 1024; // 限制100MB（Vercel免费版上限）
-        if (pathStat.size > maxFileSize) {
-            return res.status(413).json({
-                error: 'File too large',
-                message: `Max file size is ${maxFileSize / 1024 / 1024}MB`
-            });
-        }
-
         // ✅ 关键修复：webdav@5.x 仅支持 binary/text 格式，无 buffer
         const fileBinary = await webdavClient.getFileContents(path); // 默认 binary 格式
         const fileBuffer = Buffer.from(fileBinary, 'binary'); // 转为 Buffer
@@ -165,7 +156,7 @@ export default async (req, res) => {
 // 辅助函数：格式化文件大小
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 B';
-    const units = ['B', 'KB', 'MB', 'GB'];
+    const units = ['Bytes', 'KiB', 'MiB', 'GiB'];
     const scale = 1024;
     const index = Math.floor(Math.log(bytes) / Math.log(scale));
     return `${(bytes / Math.pow(scale, index)).toFixed(2)} ${units[index]}`;
