@@ -107,7 +107,7 @@ export default async (req, res) => {
                 // 生成正确的相对路径（确保以/开头）
                 const link = path === '/' ? `/${relativePath}` : `${path}/${relativePath}`;
                 // 去除可能的重复斜杠
-                const cleanLink = encodeURI(link.replace(/\/+/g, '/'));
+                const cleanLink = link.replace(/\/+/g, '/');
 
                 return `
                     <li class="file-item">
