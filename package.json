@@ -1,6 +1,10 @@
 {
     "name": "webdav-vercel-mirror",
     "version": "1.0.0",
+    "type": "module",
+    "engines": {
+        "node": "18.x"
+    },
     "dependencies": {
         "webdav": "^5.3.0",
         "cors": "^2.8.5"
