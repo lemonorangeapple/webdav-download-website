@@ -1,12 +1,10 @@
 {
-    "rewrites": [
-        {
-            "source": "/webdav/(.*)",
-            "destination": "/api/webdav/$1"
-        },
-        {
-            "source": "/webdav",
-            "destination": "/api/webdav"
-        }
-    ]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.js" }
+  ],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 120
+    }
+  }
 }

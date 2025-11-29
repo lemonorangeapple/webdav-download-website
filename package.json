@@ -1,8 +1,8 @@
 {
-  "name": "webdav-proxy",
-  "version": "1.0.0",
-  "dependencies": {
-    "basic-auth": "^2.0.1",
-    "http-proxy-middleware": "^2.0.6"
-  }
+    "name": "webdav-vercel-mirror",
+    "version": "1.0.0",
+    "dependencies": {
+        "webdav-client": "^4.13.0",
+        "cors": "^2.8.5"
+    }
 }
