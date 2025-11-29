@@ -104,7 +104,7 @@ export default async (req, res) => {
                 const relativePath = file.filename.startsWith(path)
                     ? file.filename.slice(path.length)
                     : file.filename;
-                const rawPath = req.url.replace(/^\/api/, '') || '/';
+                const rawPath = relativePath.replace(/^\/api/, '') || '/';
                 // 解码并清理路径（去除多余斜杠、处理特殊字符）
                 const decodedPath = decodeURIComponent(rawPath).replace(/\/+/g, '/');
                 // 确保路径以/开头
