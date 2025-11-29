@@ -104,10 +104,13 @@ export default async (req, res) => {
                 const relativePath = file.filename.startsWith(path)
                     ? file.filename.slice(path.length)
                     : file.filename;
-                // 生成正确的相对路径（确保以/开头）
-                const link = path === '/' ? `/${relativePath}` : `${path}/${relativePath}`;
-                // 去除可能的重复斜杠
-                const cleanLink = link.replace(/\/+/g, '/');
+                const rawPath = req.url.replace(/^\/api/, '') || '/';
+                // 解码并清理路径（去除多余斜杠、处理特殊字符）
+                const decodedPath = decodeURIComponent(rawPath).replace(/\/+/g, '/');
+                // 确保路径以/开头
+                const normalizedPath = decodedPath.startsWith('/') ? decodedPath : `/${decodedPath}`;
+                // 对最终路径进行UTF-8编码（适配WebDAV服务）
+                const cleanLink = encodeURI(normalizedPath);
 
                 return `
                     <li class="file-item">
