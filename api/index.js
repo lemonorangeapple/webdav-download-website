@@ -100,13 +100,25 @@ export default async (req, res) => {
         <body>
           <h1>📁 ${path}</h1>
           <ul class="file-list">
-            ${path !== '/' ? `<li class="file-item parent-dir"><a href="${path.replace(/\/[^/]+\/?$/, '') || '/'}">⬆️ Parent Directory</a></li>` : ''}
-            ${files.map(file => `
-              <li class="file-item">
-                <a href="${file.filename.startsWith('/') ? file.filename : '/' + file.filename}">${file.basename}</a>
-                <span class="file-size">${formatFileSize(file.size)}</span>
-              </li>
-            `).join('')}
+            ${path !== '/' ? `<li class="file-item parent-dir"><a href="${path.split('/').slice(0, -1).join('/') || '/'}">⬆️ Parent Directory</a></li>` : ''}
+            // 替换原文件链接生成部分
+            ${files.map(file => {
+                // 处理路径，确保以当前路径为基准拼接，避免重复斜杠
+                const relativePath = file.filename.startsWith(path)
+                    ? file.filename.slice(path.length)
+                    : file.filename;
+                // 生成正确的相对路径（确保以/开头）
+                const link = path === '/' ? `/${relativePath}` : `${path}/${relativePath}`;
+                // 去除可能的重复斜杠
+                const cleanLink = encodeURI(link.replace(/\/+/g, '/'));
+
+                return `
+                    <li class="file-item">
+                        <a href="${cleanLink}">${file.basename}</a>
+                        <span class="file-size">${formatFileSize(file.size)}</span>
+                    </li>
+                `;
+            }).join('')}
           </ul>
         </body>
         </html>
