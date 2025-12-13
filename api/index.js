@@ -100,7 +100,8 @@ export default async (req, res) => {
           <ul class="file-list">
             ${path !== '/' ? `<li class="file-item parent-dir"><a href="${path.split('/').slice(0, -1).join('/') || '/'}">⬆️ Parent Directory</a></li>` : ''}
             ${files.map(file => {
-                const rawPath = path.replace(/^\/api/, '') || '/';
+                const relativePath = file.filename.startsWith(path) ? file.filename.slice(path.length) : file.filename;
+                const rawPath = relativePath.replace(/^\/api/, '') || '/';
                 const decodedPath = decodeURIComponent(rawPath);
                 // 确保路径以/开头
                 const normalizedPath = decodedPath.startsWith('/') ? decodedPath : `/${decodedPath}`;
