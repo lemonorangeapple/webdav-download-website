@@ -102,6 +102,7 @@ export default async (req, res) => {
             ${files.map(file => {
                 const relativePath = file.filename.startsWith(path) ? file.filename.slice(path.length) : file.filename;
                 const rawPath = relativePath.replace(/^\/api/, '') || '/';
+                console.log(path, relativePath, rawPath);
                 const decodedPath = decodeURIComponent(rawPath);
                 // 确保路径以/开头
                 const normalizedPath = decodedPath.startsWith('/') ? decodedPath : `/${decodedPath}`;
