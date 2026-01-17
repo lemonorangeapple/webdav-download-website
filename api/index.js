@@ -82,6 +82,7 @@ export default async (req, res) => {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <script defer src="https://status.imjcj.eu.org/script.js" data-website-id="de91f9df-1cb9-457e-be8e-5aafbc7f1152"></script>
           <title>Directory: ${path}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
