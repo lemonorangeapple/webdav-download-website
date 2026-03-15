@@ -74,7 +74,7 @@ export default async (req, res) => {
         // 6. 处理目录请求（返回文件列表）
         if (pathStat.type === 'directory') {
             const files = await webdavClient.getDirectoryContents(path);
-            const weburl = process.env.VERCEL_URL;
+            const unique = process.env.VERCEL_PROJECT_NAME;
             // 生成美观的目录页面
             const html = `
         <!DOCTYPE html>
@@ -117,7 +117,7 @@ export default async (req, res) => {
                 `;
             }).join('')}
           </ul>
-          <div style="position: absolute; bottom: 0; left: 0; text-align: center; width: 100vw;"><span style="color: gray;">${weburl}</span></div>
+          <div style="position: absolute; bottom: 0; left: 0; text-align: center; width: 100vw;"><span style="color: gray;">${unique}</span></div>
         </body>
         </html>
       `;
