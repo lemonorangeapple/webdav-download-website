@@ -117,7 +117,7 @@ export default async (req, res) => {
                 `;
             }).join('')}
           </ul>
-          <div style="position: absolute; bottom: 0; text-align: center;"><span style="color: gray;">${weburl}</span></div>
+          <div style="position: absolute; bottom: 0; left: 0; text-align: center; width: 100vw;"><span style="color: gray;">${weburl}</span></div>
         </body>
         </html>
       `;
