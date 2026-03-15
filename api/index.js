@@ -14,7 +14,6 @@ const getWebDAVClient = () => {
     const url = process.env.REMOTE_WEBDAV_URL;
     const user = process.env.REMOTE_WEBDAV_USER;
     const pass = process.env.REMOTE_WEBDAV_PASS;
-    const weburl = process.env.VERCEL_URL;
 
     if (!url || !user || !pass) {
         throw new Error('Missing REMOTE_WEBDAV_URL/USER/PASS environment variables');
@@ -75,7 +74,7 @@ export default async (req, res) => {
         // 6. 处理目录请求（返回文件列表）
         if (pathStat.type === 'directory') {
             const files = await webdavClient.getDirectoryContents(path);
-
+            const weburl = process.env.VERCEL_URL;
             // 生成美观的目录页面
             const html = `
         <!DOCTYPE html>
