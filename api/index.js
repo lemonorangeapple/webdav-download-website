@@ -14,6 +14,7 @@ const getWebDAVClient = () => {
     const url = process.env.REMOTE_WEBDAV_URL;
     const user = process.env.REMOTE_WEBDAV_USER;
     const pass = process.env.REMOTE_WEBDAV_PASS;
+    const weburl = process.env.VERCEL_URL;
 
     if (!url || !user || !pass) {
         throw new Error('Missing REMOTE_WEBDAV_URL/USER/PASS environment variables');
@@ -117,6 +118,7 @@ export default async (req, res) => {
                 `;
             }).join('')}
           </ul>
+          <div style="position: absolute; bottom: 0; text-align: center;"><span style="color: gray;">${weburl}</span></div>
         </body>
         </html>
       `;
