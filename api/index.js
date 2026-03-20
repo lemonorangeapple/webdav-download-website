@@ -117,7 +117,7 @@ export default async (req, res) => {
                 `;
             }).join('')}
           </ul>
-          <div style="position: absolute; bottom: 0; left: 0; text-align: center; width: 100vw;"><span style="color: gray;">${unique}</span></div>
+          <span style="position: absolute; left: 0; top: 0; color: white;">${unique}</span>
         </body>
         </html>
       `;
